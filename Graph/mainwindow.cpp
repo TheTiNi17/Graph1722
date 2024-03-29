@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //////
+
     // Добавляем узлы
     graph.addNode(1, "Node 1", "This is the first node");
     graph.addNode(2, "Node 2", "This is the second node");
@@ -26,8 +26,21 @@ MainWindow::MainWindow(QWidget *parent)
 
     graph.printGraph();
         // Сохраняем граф в JSON и выводим результат
-    // QString jsonStr = graph.saveToJson();
-    //std::cout << jsonStr.toStdString() << std::endl;
+    std::string graph_str = graph.saveToJson();
+    writeStringToFile("../pisia", graph_str, ".json");
+    //graph.saveToJson();
+}
+void MainWindow::writeStringToFile(const std::string& filename, const std::string& str, const std::string&postfix) {
+//    std::cout << str << std::endl;
+    std::string  cur_file = filename + postfix;
+    std::ofstream fileStream(cur_file);
+    if (!fileStream) {
+        std::cout << "Ошибка при открытии файла: " << cur_file << std::endl;
+        return;
+    }
+
+    fileStream << str;
+    fileStream.close();
 }
 
 MainWindow::~MainWindow()

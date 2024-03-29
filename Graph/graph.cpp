@@ -63,31 +63,31 @@ void Graph::printGraph()
 
 std::string Graph::saveToJson()
 {
-    std::stringstream json;
-    json << "{\n";
-    json << "  \"nodes\": [\n";
+    std::string res = "";
+    res += "{\n";
+    res +=  "  \"nodes\": [\n";
     for (auto it = nodes.begin(); it != nodes.end(); ++it)
     {
-        json << "    {\n";
-        json << "      \"id\": " << it->second.get_id() << ",\n";
-        json << "      \"name\": \"" << it->second.get_name() << "\",\n";
-        json << "      \"description\": \"" << it->second.get_description() << "\"\n";
-        json << "    }";
-        if (std::next(it) != nodes.end()) json << ",";
-        json << "\n";
+        res += "    {\n";
+        res +="      \"id\": " + std::to_string(it->second.get_id()) + ",\n";
+        res += "    \"name\": \"" +  it->second.get_name() + "\",\n";
+        res +="      \"description\": \"" + it->second.get_description() + "\"\n";
+        res += "    }";
+        if (std::next(it) != nodes.end()) res += ",";
+        res += "\n";
     }
-    json << "  ],\n";
-    json << "  \"edges\": [\n";
+    res +="  ],\n";
+    res += "  \"edges\": [\n";
     for (auto it = edges.begin(); it != edges.end(); ++it)
     {
-        json << "    {\n";
-        json << "      \"from\": " << it->first << ",\n";
-        json << "      \"to\": " << it->second << "\n";
-        json << "    }";
-        if (std::next(it) != edges.end()) json << ",";
-        json << "\n";
+        res += "    {\n";
+        res += "      \"from\": " + std::to_string(it->first) + ",\n";
+        res += "      \"to\": " + std::to_string(it->second) + "\n";
+        res += "    }";
+        if (std::next(it) != edges.end()) res += ",";
+        res +=  "\n";
     }
-    json << "  ]\n";
-    json << "}";
-    return json.str();
+    res += "  ]\n";
+    res += "}";
+    return res;
 }
