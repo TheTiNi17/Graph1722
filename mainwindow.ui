@@ -60,7 +60,7 @@
     <item>
      <widget class="QLabel" name="label_10">
       <property name="text">
-       <string>Если вы хотите удалить несколько, то запишите их через запятую без пробедов</string>
+       <string>Если вы хотите удалить несколько, то запишите их через запятую без пробелов</string>
       </property>
      </widget>
     </item>
@@ -248,7 +248,7 @@
      <x>0</x>
      <y>0</y>
      <width>934</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
