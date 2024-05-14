@@ -1,18 +1,24 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 // разделят строку на подстроки через , [asd,fgh,jkl]->[asd][fgh][hjk]
-QVector<QString> get_mas(QString a){
+QVector<QString> get_mas(QString a)
+{
     QVector<QString>ans;
     QString b = "";
-    for (int i = 0; i < a.size(); i++){
-        if(a[i] != ','){
+    for (int i = 0; i < a.size(); i++)
+    {
+        if(a[i] != ',')
+        {
             b += a[i];
-        }else{
+        }
+        else
+        {
             ans.push_back(b);
             b = "";
         }
     }
-    if (b.size() != 0){
+    if (b.size() != 0)
+    {
         ans.push_back(b);
     }
     return ans;
@@ -23,23 +29,17 @@ static int randomBetween(int low, int high)
     return (qrand() % ((high + 1) - low) + low);
 }
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //this->resize(640,640);          // Устанавливаем размеры окна приложения
-        //this->setFixedSize(640,640);
-
-        scene = new QGraphicsScene(this);   // Инициализируем графическую сцену
-        scene->setItemIndexMethod(QGraphicsScene::NoIndex); // настраиваем индексацию элементов
-        ui->graphicsView->resize(600,600);  // Устанавливаем размер graphicsView
-        ui->graphicsView->setScene(scene);  // Устанавливаем графическую сцену в graphicsView
-        ui->graphicsView->setRenderHint(QPainter::Antialiasing);    // Настраиваем рендер
-        ui->graphicsView->setCacheMode(QGraphicsView::CacheBackground); // Кэш фона
-        ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-        connect(scene,SIGNAL(changed(QList<QRectF>)),SLOT(update()));
-        //scene->setSceneRect(0,0,500,500); // Устанавливаем размер сцены
+    scene = new QGraphicsScene(this);   // Инициализируем графическую сцену
+    scene->setItemIndexMethod(QGraphicsScene::NoIndex); // настраиваем индексацию элементов
+    ui->graphicsView->resize(600,600);  // Устанавливаем размер graphicsView
+    ui->graphicsView->setScene(scene);  // Устанавливаем графическую сцену в graphicsView
+    ui->graphicsView->setRenderHint(QPainter::Antialiasing);    // Настраиваем рендер
+    ui->graphicsView->setCacheMode(QGraphicsView::CacheBackground); // Кэш фона
+    ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+    connect(scene,SIGNAL(changed(QList<QRectF>)),SLOT(update()));
 }
 
 MainWindow::~MainWindow()
@@ -54,13 +54,13 @@ void MainWindow::on_pushButton_clicked()
     QString name =  ui->name->text();//имя
     QString fname = ui->fname->text();//описание
     auto it = del.find(name); // проверка на повторение имя
-    if(it != del.end()){
+    if(it != del.end())
+    {
         QMessageBox::warning(this, "Ошибка", "Узел с именем " + name + " уже существует");
         return;
     }
     MoveItem *item = new MoveItem(0, kol, name, fname);        // Создаём графический элемента
-    item->setPos(randomBetween(0, 500),    // Устанавливаем случайную позицию элемента
-                 randomBetween(0,500));
+    item->setPos(randomBetween(0, 500), randomBetween(0,500));
     scene->addItem(item); // Добавляем элемент на графическую сцену
     del[name] = item;
     item->del = &par;
@@ -259,7 +259,7 @@ void MainWindow::on_but_change_clicked()
 //загрузка
 void MainWindow::on_but_down_clicked()
 {
-    QString name = ui->down->text();
+    QString name = ui->save->text();//имя файла
     //проверка на кор.
     if(name.size() < 5){
         QMessageBox::warning(this, "Ошибка", "Файл должн оканчиватся на .txt .json .xml");
@@ -551,4 +551,3 @@ void MainWindow::on_but_down_clicked()
     }
     fin.close();
 }
-
