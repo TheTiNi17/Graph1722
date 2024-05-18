@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QCursor>
 #include <QWidget>
+#include <QBrush>
 
 class MoveItem : public QObject, public QGraphicsItem
 {

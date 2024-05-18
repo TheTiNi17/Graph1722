@@ -15,6 +15,7 @@ MoveItem::MoveItem(QObject *parent, int k, QString name, QString fname) :
     kut = k;
     this->name = name;
     this->fname = fname;
+    //this->setBrush(QBrush(Qt::white));
 }
 
 MoveItem::~MoveItem()
@@ -29,20 +30,22 @@ QRectF MoveItem::boundingRect() const
 
 void MoveItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    QFont font;
+    font.setPointSize(8);
+    font.setBold(true);
+    painter->setFont(font);
+
     painter->setPen(Qt::black);
-    painter->setBrush(Qt::green);
-    painter->drawRect(-10,-10,40,40);
+    painter->setBrush(QColor(0, 230, 0));
+    painter->drawEllipse(-10,-10,50,50);
     Q_UNUSED(option);
     Q_UNUSED(widget);
     Q_UNUSED(option);
     Q_UNUSED(widget);
     for(auto iter = ((*del)[this]).begin(); ((*del)[this]).end()!= iter; iter++){
         qDebug()<< this->pos();
-        painter->setPen(Qt::green);
-      painter->drawLine(QPointF(0, 0), (*iter).first->pos() - this->pos());
-      painter->setPen(Qt::red);
+        painter->drawLine(QPointF(0, 0), (*iter).first->pos() - this->pos());
         painter->drawText(((*iter).first->pos() - this->pos())/2, int_to_string(iter->second));
-        painter->setPen(Qt::black);
     }
     painter->drawText(QPointF(-10, 0),name);
     widget->update();
