@@ -12,7 +12,7 @@
 #include <QTextCodec>
 #include <fstream>
 #include <iostream>
-//#include <experimental/filesystem>
+#include <QRegExpValidator>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,25 +29,26 @@ public:
     QMap <QString ,MoveItem*> del;
 
 private slots:
-    void on_pushButton_clicked();
+    void on_AddNodeButton_clicked();
 
-    void on_pushButton_2_clicked();
+    void on_DelNodeButton_clicked();
 
-    void on_Button_del_clicked();
+    void on_ChangeNodeButton_clicked();
 
-    void on_But_add_clicked();
+    void on_AddEdgeButton_clicked();
 
-    void on_but_del_reb_clicked();
+    void on_DelEdgeButton_clicked();
 
-    void on_but_save_clicked();
+    void on_DelGraphButton_clicked();
 
-    void on_but_change_clicked();
+    void on_SaveGraphButton_clicked();
 
-    void on_but_down_clicked();
+    void on_LoadGraphButton_clicked();
 
 private:
+    QVector<QString> StrToVector(QString a);
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
-    int kol = 0;
+    int amount = 0;
 };
 #endif // MAINWINDOW_H

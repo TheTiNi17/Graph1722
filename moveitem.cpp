@@ -9,12 +9,12 @@ QString int_to_string(int a){
     return ans;
 }
 
-MoveItem::MoveItem(QObject *parent, int k, QString name, QString fname) :
+MoveItem::MoveItem(QObject *parent, int k, QString Name, QString Description) :
     QObject(parent), QGraphicsItem()
 {
     kut = k;
-    this->name = name;
-    this->fname = fname;
+    this->Name = Name;
+    this->Description = Description;
     //this->setBrush(QBrush(Qt::white));
 }
 
@@ -42,14 +42,13 @@ void MoveItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     Q_UNUSED(widget);
     Q_UNUSED(option);
     Q_UNUSED(widget);
-    for(auto iter = ((*del)[this]).begin(); ((*del)[this]).end()!= iter; iter++){
-        qDebug()<< this->pos();
+    for(auto iter = ((*del)[this]).begin(); ((*del)[this]).end()!= iter; iter++)
+    {
         painter->drawLine(QPointF(0, 0), (*iter).first->pos() - this->pos());
         painter->drawText(((*iter).first->pos() - this->pos())/2, int_to_string(iter->second));
     }
-    painter->drawText(QPointF(-10, 0),name);
+    painter->drawText(QPointF(-10, 0),Name);
     widget->update();
-    qDebug()<< del->size();
 }
 
 void MoveItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -70,7 +69,6 @@ void MoveItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     /* При нажатии мышью на графический элемент
      * заменяем курсор на руку, которая держит этот элемента
      * */
-    qDebug() << this->pos();
     this->setCursor(QCursor(Qt::ClosedHandCursor));
     Q_UNUSED(event);
 }

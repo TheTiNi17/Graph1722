@@ -26,7 +26,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="AddNodeButton">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -84,7 +84,7 @@ QPushButton:pressed
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="name">
+            <widget class="QLineEdit" name="NameAddLine">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -113,7 +113,7 @@ QPushButton:pressed
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="fname">
+            <widget class="QLineEdit" name="DescriptionAddLine">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -136,7 +136,7 @@ QPushButton:pressed
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QPushButton" name="Button_del">
+            <widget class="QPushButton" name="DelNodeButton">
              <property name="minimumSize">
               <size>
                <width>200</width>
@@ -176,7 +176,7 @@ QPushButton:pressed
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="del_uz">
+            <widget class="QLineEdit" name="NameDelLine">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -196,7 +196,7 @@ QPushButton:pressed
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <widget class="QPushButton" name="but_change">
+            <widget class="QPushButton" name="ChangeNodeButton">
              <property name="minimumSize">
               <size>
                <width>200</width>
@@ -233,7 +233,7 @@ QPushButton:pressed
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="old">
+            <widget class="QLineEdit" name="OldNameChangeLine">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -262,7 +262,7 @@ QPushButton:pressed
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="new_2">
+            <widget class="QLineEdit" name="NewNameChangeLine">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -285,7 +285,7 @@ QPushButton:pressed
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="new_fname">
+            <widget class="QLineEdit" name="NewDescriptionChangeLine">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -312,7 +312,7 @@ QPushButton:pressed
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
-            <widget class="QPushButton" name="But_add">
+            <widget class="QPushButton" name="AddEdgeButton">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -361,7 +361,7 @@ QPushButton:pressed
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="add_1">
+            <widget class="QLineEdit" name="Name1AddEdgeLine">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -393,7 +393,7 @@ QPushButton:pressed
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="add_2">
+            <widget class="QLineEdit" name="Name2AddEdgeLine">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -416,7 +416,7 @@ QPushButton:pressed
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="len">
+            <widget class="QLineEdit" name="WeightAddEdgeLine">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -430,7 +430,7 @@ QPushButton:pressed
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>
-            <widget class="QPushButton" name="but_del_reb">
+            <widget class="QPushButton" name="DelEdgeButton">
              <property name="minimumSize">
               <size>
                <width>320</width>
@@ -467,7 +467,7 @@ QPushButton:pressed
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="del_1">
+            <widget class="QLineEdit" name="Name1DelEdgeLine">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -496,7 +496,7 @@ QPushButton:pressed
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="del_2">
+            <widget class="QLineEdit" name="Name2DelEdgeLine">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -523,7 +523,7 @@ QPushButton:pressed
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="DelGraphButton">
              <property name="styleSheet">
               <string notr="true">QPushButton
 {
@@ -541,7 +541,7 @@ QPushButton:pressed
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="but_save">
+            <widget class="QPushButton" name="SaveGraphButton">
              <property name="minimumSize">
               <size>
                <width>200</width>
@@ -565,7 +565,7 @@ QPushButton:pressed
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="but_down">
+            <widget class="QPushButton" name="LoadGraphButton">
              <property name="minimumSize">
               <size>
                <width>200</width>
@@ -602,7 +602,7 @@ QPushButton:pressed
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="save">
+            <widget class="QLineEdit" name="FileNameLine">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                <horstretch>0</horstretch>

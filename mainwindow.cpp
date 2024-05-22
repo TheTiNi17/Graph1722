@@ -1,7 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+
 // разделят строку на подстроки через , [asd,fgh,jkl]->[asd][fgh][hjk]
-QVector<QString> get_mas(QString a)
+QVector<QString> MainWindow::StrToVector(QString a)
 {
     QVector<QString>ans;
     QString b = "";
@@ -24,7 +26,7 @@ QVector<QString> get_mas(QString a)
     return ans;
 }
 
-static int randomBetween(int low, int high)
+static int RandomBetween(int low, int high)
 {
     return (qrand() % ((high + 1) - low) + low);
 }
@@ -40,6 +42,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     ui->graphicsView->setCacheMode(QGraphicsView::CacheBackground); // Кэш фона
     ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
     connect(scene,SIGNAL(changed(QList<QRectF>)),SLOT(update()));
+
+    QRegExpValidator *validator = new QRegExpValidator(QRegExp("[0-9]+(,[0-9]+)*"));
+    ui->WeightAddEdgeLine->setValidator(validator);
 }
 
 MainWindow::~MainWindow()
@@ -48,68 +53,94 @@ MainWindow::~MainWindow()
 }
 
 // создание нового узла
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_AddNodeButton_clicked()
 {
-    kol++;
-    QString name =  ui->name->text();//имя
-    QString fname = ui->fname->text();//описание
+    amount++;
+    QString name =  ui->NameAddLine->text();//имя
+    QString fname = ui->DescriptionAddLine->text();//описание
     auto it = del.find(name); // проверка на повторение имя
     if(it != del.end())
     {
         QMessageBox::warning(this, "Ошибка", "Узел с именем " + name + " уже существует");
         return;
     }
-    MoveItem *item = new MoveItem(0, kol, name, fname);        // Создаём графический элемента
-    item->setPos(randomBetween(0, 500), randomBetween(0,500));
+    MoveItem *item = new MoveItem(0, amount, name, fname);        // Создаём графический элемента
+    item->setPos(RandomBetween(0, 500), RandomBetween(0,500));
     scene->addItem(item); // Добавляем элемент на графическую сцену
     del[name] = item;
     item->del = &par;
 }
 
-
-// удаляем все элементы
-void MainWindow::on_pushButton_2_clicked()
-{
-    for(auto iter = del.begin(); del.end()!= iter; iter++){
-        delete *iter;
-    }
-    del.clear();
-    par.clear();
-    kol = 0;
-}
-
 //удаляем один узел
-void MainWindow::on_Button_del_clicked()
+void MainWindow::on_DelNodeButton_clicked()
 {
-    QString del_st = ui->del_uz->text();
-    QVector<QString> delp = get_mas(del_st);
+    QString del_st = ui->NameDelLine->text();
+    QVector<QString> delp = StrToVector(del_st);
     //ищем все ребра связанные с ним и удаляем их
-    for(int k = 0; k < delp.size(); k++){
-    auto it = del.find(delp[k]);
-    if (it != del.end()){
-        for(auto i = par.begin(); i != par.end(); i++){
-            for(auto j = i->begin(); j != i->end(); j++){
-                if(j->first == del[delp[k]]){
-                    i->erase(j);
+    for(int k = 0; k < delp.size(); k++)
+    {
+        auto it = del.find(delp[k]);
+        if (it != del.end()){
+            for(auto i = par.begin(); i != par.end(); i++)
+            {
+                for(auto j = i->begin(); j != i->end(); j++)
+                {
+                    if(j->first == del[delp[k]]){
+                        i->erase(j);
+                    }
                 }
             }
+            par[del[delp[k]]].clear();
+            auto ite = par.find(del[delp[k]]);
+            par.erase(ite);
+            delete del[delp[k]]; // удаляем сам узел
+            del.erase(it);
         }
-        par[del[delp[k]]].clear();
-        auto ite = par.find(del[delp[k]]);
-        par.erase(ite);
-        delete del[delp[k]]; // удаляем сам узел
-        del.erase(it);
     }
+}
+
+// новое имя узла или изменить описание
+void MainWindow::on_ChangeNodeButton_clicked()
+{
+    QString old = ui->OldNameChangeLine->text();//старое
+    QString new_ = ui->NewNameChangeLine->text();//новое
+    QString Description = ui->NewDescriptionChangeLine->text();
+    if(new_.size() == 0){
+        auto it = del.find(old);
+        if(it == del.end()){//есть ли старое имя
+            QMessageBox::warning(this, "Ошибка", "Узла с названием " + old + " нет");
+            return;
+        }
+        del[old]->Description = Description;
+        QMessageBox::warning(this, " ", "Описание изменино");
+        return;
     }
-    qDebug() << del_st;
+    auto it = del.find(old);
+    if(it == del.end()){//есть ли старое имя
+        QMessageBox::warning(this, "Ошибка", "Узла с названием " + old + " нет");
+        return;
+    }
+    if (old == new_){
+        return;
+    }
+    it = del.find(new_);
+    if(it != del.end()){//есть ли новое
+        QMessageBox::warning(this, "Ошибка", "Узел с названием " + new_ + " уже существует");
+        return;
+    }
+    //смена имени
+    del[old]->Name = new_;
+    del[new_] = del[old];
+    it = del.find(old);
+    del.erase(it);
 }
 
 //(добавляем/изменяем вес)
-void MainWindow::on_But_add_clicked()
+void MainWindow::on_AddEdgeButton_clicked()
 {
-    QString first = ui->add_1->text();//первый узел
-    QString second = ui->add_2->text();//второй узел
-    QString len = ui->len->text();//вес
+    QString first = ui->Name1AddEdgeLine->text();//первый узел
+    QString second = ui->Name2AddEdgeLine->text();//второй узел
+    QString len = ui->WeightAddEdgeLine->text();//вес
     if (len.size() == 0){//если вес не задается, он по умолчанию один
         len = "1";
     }
@@ -145,10 +176,10 @@ void MainWindow::on_But_add_clicked()
 }
 
 //удаление ребра
-void MainWindow::on_but_del_reb_clicked()
+void MainWindow::on_DelEdgeButton_clicked()
 {
-    QString first = ui->del_1->text();
-    QString second = ui->del_2->text();
+    QString first = ui->Name1DelEdgeLine->text();
+    QString second = ui->Name2DelEdgeLine->text();
     auto it = del.find(first);
     auto it1 = del.find(second);
     if (it ==  del.end() || it1 ==  del.end()){//проверка на сущ. узлов
@@ -175,10 +206,21 @@ void MainWindow::on_but_del_reb_clicked()
     }
 }
 
-//сохранение
-void MainWindow::on_but_save_clicked()
+// удаляем все элементы
+void MainWindow::on_DelGraphButton_clicked()
 {
-    QString name = ui->save->text();//имя файла
+    for(auto iter = del.begin(); del.end()!= iter; iter++){
+        delete *iter;
+    }
+    del.clear();
+    par.clear();
+    amount = 0;
+}
+
+//сохранение
+void MainWindow::on_SaveGraphButton_clicked()
+{
+    QString name = ui->FileNameLine->text();//имя файла
     // проверка на правильность
     if(name.size() < 5){
         QMessageBox::warning(this, "Ошибка", "Файл должн оканчиватся на .txt .json .xml");
@@ -198,11 +240,11 @@ void MainWindow::on_but_save_clicked()
     }
     fout << del.size() << std::endl;//число узлов
     for (auto iter = del.begin(); iter != del.end(); iter++){
-        std::string name_uz = (*iter)->name.toLocal8Bit().constData();
-        std::string fname = (*iter)->fname.toLocal8Bit().constData();
+        std::string name_uz = (*iter)->Name.toLocal8Bit().constData();
+        std::string Description = (*iter)->Description.toLocal8Bit().constData();
         int x = (*iter)->pos().toPoint().x();
         int y = (*iter)->pos().toPoint().y();
-        fout << "<" << name_uz << "><"<< fname <<"> pos(" << x << ";" << y << ")" << std::endl;
+        fout << "<" << name_uz << "><"<< Description <<"> pos(" << x << ";" << y << ")" << std::endl;
     }
     int kol_par = 0;
     for(auto iter = del.begin(); iter!= del.end(); iter++){
@@ -211,8 +253,8 @@ void MainWindow::on_but_save_clicked()
     fout << kol_par << std::endl;//число ребер
     for(auto iter = del.begin(); iter != del.end(); iter++){
         for(auto j = par[(*iter)].begin(); j != par[(*iter)].end(); j++){
-            std::string fir = (*iter)->name.toLocal8Bit().constData();
-            std::string sec = (*j).first->name.toLocal8Bit().constData();
+            std::string fir = (*iter)->Name.toLocal8Bit().constData();
+            std::string sec = (*j).first->Name.toLocal8Bit().constData();
             fout << "<" << fir << "><" << sec << "> " << (*j).second << std::endl;
         }
     }
@@ -220,46 +262,10 @@ void MainWindow::on_but_save_clicked()
     fout.close();
 }
 
-// новое имя узла или изменить описание
-void MainWindow::on_but_change_clicked()
-{
-    QString old = ui->old->text();//старое
-    QString new_ = ui->new_2->text();//новое
-    QString fname = ui->new_fname->text();
-    if(new_.size() == 0){
-        auto it = del.find(old);
-        if(it == del.end()){//есть ли старое имя
-            QMessageBox::warning(this, "Ошибка", "Узла с названием " + old + " нет");
-            return;
-        }
-        del[old]->fname = fname;
-        QMessageBox::warning(this, " ", "Описание изменино");
-        return;
-    }
-    auto it = del.find(old);
-    if(it == del.end()){//есть ли старое имя
-        QMessageBox::warning(this, "Ошибка", "Узла с названием " + old + " нет");
-        return;
-    }
-    if (old == new_){
-        return;
-    }
-    it = del.find(new_);
-    if(it != del.end()){//есть ли новое
-        QMessageBox::warning(this, "Ошибка", "Узел с названием " + new_ + " уже существует");
-        return;
-    }
-    //смена имени
-    del[old]->name = new_;
-    del[new_] = del[old];
-    it = del.find(old);
-    del.erase(it);
-}
-
 //загрузка
-void MainWindow::on_but_down_clicked()
+void MainWindow::on_LoadGraphButton_clicked()
 {
-    QString name = ui->save->text();//имя файла
+    QString name = ui->FileNameLine->text();//имя файла
     //проверка на кор.
     if(name.size() < 5){
         QMessageBox::warning(this, "Ошибка", "Файл должн оканчиватся на .txt .json .xml");
@@ -507,9 +513,9 @@ void MainWindow::on_but_down_clicked()
     }
     del.clear();
     par.clear();
-    kol = 0;
+    amount = 0;
     for(auto iter = del_new.begin(); del_new.end()!= iter; iter++){
-        kol++;
+        amount++;
         QString name =  QString::fromStdString(iter.key());
         QString fname = QString::fromStdString(fname_op[iter.key()]);
         auto it = del.find(name);
@@ -517,7 +523,7 @@ void MainWindow::on_but_down_clicked()
             QMessageBox::warning(this, "Ошибка", "Узел с именем " + name + " уже существует");
             return;
         }
-        MoveItem *item = new MoveItem(0, kol, name, fname);        // Создаём графический элемента
+        MoveItem *item = new MoveItem(0, amount, name, fname);        // Создаём графический элемента
         item->setPos(iter->first,    // Устанавливаем случайную позицию элемента
                      iter->second);
         scene->addItem(item); // Добавляем элемент на графическую сцену
