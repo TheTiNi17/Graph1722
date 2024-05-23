@@ -14,12 +14,11 @@ class MoveItem : public QObject, public QGraphicsItem
 {
     Q_OBJECT
 public:
-    explicit MoveItem(QObject *parent = 0, int k = 0, QString Name = "", QString Description = "");
-    ~MoveItem();
+    MoveItem(QObject *parent = 0, int k = 0, QString Name = "", QString Description = "");
     int kut = 0;
     QString Name;
     QString Description;
-    QMap<MoveItem*, QList<std::pair<MoveItem*, int>>> *del;
+    QMap<MoveItem*, QList<std::pair<MoveItem*, int>>> *PairContainer;
 signals:
 
 private:
