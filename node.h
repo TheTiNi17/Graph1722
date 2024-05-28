@@ -1,5 +1,5 @@
-#ifndef MOVEITEM_H
-#define MOVEITEM_H
+#ifndef NODE_H
+#define NODE_H
 
 #include <QObject>
 #include <QGraphicsItem>
@@ -10,18 +10,27 @@
 #include <QWidget>
 #include <QBrush>
 
-class MoveItem : public QObject, public QGraphicsItem
+class Node : public QObject, public QGraphicsItem
 {
     Q_OBJECT
 public:
-    MoveItem(QObject *parent = 0, int k = 0, QString Name = "", QString Description = "");
-    int kut = 0;
+    Node(QObject *parent = 0, QString Name = "", QString Description = "");
     QString Name;
     QString Description;
-    QMap<MoveItem*, QList<std::pair<MoveItem*, int>>> *PairContainer;
+    void ChangeName(QString Name);
+    void ChangeDescription(QString Name);
+    std::string GetName();
+    std::string GetDescription();
+    bool EdgesContains(Node* node);
+    void NewEdge(Node* node, QString weight);
+    void RemoveEdge(Node* node);
+    void RemoveAllEdges();
+    QHash <Node*, QString> GetEdges() const;
+
 signals:
 
 private:
+    QHash <Node*, QString> Edges;
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -31,4 +40,4 @@ private:
 public slots:
 };
 
-#endif // MOVEITEM_H
+#endif // NODE_H

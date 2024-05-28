@@ -29,9 +29,8 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
-    QVBoxLayout *verticalLayout_5;
-    QGroupBox *groupBox;
     QVBoxLayout *verticalLayout_2;
+    QGroupBox *groupBox;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout;
     QPushButton *AddNodeButton;
@@ -88,16 +87,14 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1081, 592);
+        MainWindow->resize(1081, 608);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        verticalLayout_5 = new QVBoxLayout(centralwidget);
-        verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
+        verticalLayout_2 = new QVBoxLayout(centralwidget);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         groupBox = new QGroupBox(centralwidget);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        verticalLayout_2 = new QVBoxLayout(groupBox);
-        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        verticalLayout = new QVBoxLayout();
+        verticalLayout = new QVBoxLayout(groupBox);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
@@ -262,10 +259,7 @@ public:
         verticalLayout->addLayout(horizontalLayout_3);
 
 
-        verticalLayout_2->addLayout(verticalLayout);
-
-
-        verticalLayout_5->addWidget(groupBox);
+        verticalLayout_2->addWidget(groupBox);
 
         groupBox_2 = new QGroupBox(centralwidget);
         groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
@@ -392,7 +386,7 @@ public:
         verticalLayout_4->addLayout(verticalLayout_3);
 
 
-        verticalLayout_5->addWidget(groupBox_2);
+        verticalLayout_2->addWidget(groupBox_2);
 
         groupBox_3 = new QGroupBox(centralwidget);
         groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
@@ -473,7 +467,7 @@ public:
         horizontalLayout_9->addLayout(horizontalLayout_8);
 
 
-        verticalLayout_5->addWidget(groupBox_3);
+        verticalLayout_2->addWidget(groupBox_3);
 
         groupBox_4 = new QGroupBox(centralwidget);
         groupBox_4->setObjectName(QString::fromUtf8("groupBox_4"));
@@ -485,7 +479,7 @@ public:
         horizontalLayout_10->addWidget(graphicsView);
 
 
-        verticalLayout_5->addWidget(groupBox_4);
+        verticalLayout_2->addWidget(groupBox_4);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
@@ -511,7 +505,7 @@ public:
         DescriptionAddLine->setText(QString());
         DelNodeButton->setText(QCoreApplication::translate("MainWindow", "\320\243\320\264\320\260\320\273\320\270\321\202\321\214 \320\243\320\267\320\265\320\273", nullptr));
         label_10->setText(QCoreApplication::translate("MainWindow", "\320\235\320\260\320\267\320\262\320\260\320\275\320\270\320\265", nullptr));
-        ChangeNodeButton->setText(QCoreApplication::translate("MainWindow", "\320\230\320\267\320\274\320\265\320\275\320\270\321\202\321\214 \320\243\320\267\320\265\320\273", nullptr));
+        ChangeNodeButton->setText(QCoreApplication::translate("MainWindow", "\320\230\320\267\320\274\320\265\320\275\320\270\321\202\321\214 \320\235\320\260\320\267\320\262\320\260\320\275\320\270\320\265 \320\270\320\273\320\270 \320\236\320\277\320\270\321\201\320\260\320\275\320\270\320\265 \320\243\320\267\320\273\320\260", nullptr));
         label_11->setText(QCoreApplication::translate("MainWindow", "\320\241\321\202\320\260\321\200\320\276\320\265 \320\235\320\260\320\267\320\262\320\260\320\275\320\270\320\265", nullptr));
         label_12->setText(QCoreApplication::translate("MainWindow", "\320\235\320\276\320\262\320\276\320\265 \320\235\320\260\320\267\320\262\320\260\320\275\320\270\320\265", nullptr));
         label_13->setText(QCoreApplication::translate("MainWindow", "\320\235\320\276\320\262\320\276\320\265 \320\236\320\277\320\270\321\201\320\260\320\275\320\270\320\265", nullptr));

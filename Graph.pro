@@ -11,11 +11,11 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    moveitem.cpp
+    node.cpp
 
 HEADERS += \
     mainwindow.h \
-    moveitem.h
+    node.h
 
 FORMS += \
     mainwindow.ui

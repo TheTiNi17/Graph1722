@@ -5,7 +5,6 @@
 #include <QMessageBox>
 #include <QGraphicsScene>
 #include <QWidget>
-#include <moveitem.h>
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
@@ -16,6 +15,8 @@
 #include <string>
 #include <QRegExpValidator>
 #include <QRandomGenerator>
+
+#include "node.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,8 +30,7 @@ public:
     //MainWindow(QWidget *parent = nullptr);
     MainWindow(int argc, char *argv[], QWidget *parent = nullptr);
     ~MainWindow();
-    QMap<MoveItem*, QList<std::pair<MoveItem*, int>>> PairContainer;
-    QMap <QString ,MoveItem*> ObjectsContainer;
+    QMap<QString, Node*> NodeContainer;
 
 private slots:
     void on_AddNodeButton_clicked();
@@ -50,11 +50,19 @@ private slots:
     void on_LoadGraphButton_clicked();
 
 private:
-    QVector<QString> StrToVector(QString a);
-    int GetRandomNumberBetween(int a, int b);
+    int GetRandomNumberFromTo(int a, int b);
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
+    QMessageBox ErrorMsgBox;
     QRandomGenerator randomgenerator;
     int amount = 0;
+    void AddNode(QString Name, QString Description, int PositionA, int PositionB);
+    void RemoveNode(QString Name);
+    void ChangeNode(QString OldName, QString NewName, QString Description);
+    void AddEdge(QString Name1, QString Name2, QString Weight);
+    void RemoveEdge(QString Name1, QString Name2);
+    void RemoveAllNodes();
+    void SaveGraph(std::string Name);
+    void LoadGraph(std::string Name);
 };
 #endif // MAINWINDOW_H
