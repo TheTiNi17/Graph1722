@@ -16,7 +16,7 @@
 #include <QRegExpValidator>
 #include <QRandomGenerator>
 
-#include "node.h"
+#include "edge.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,7 +30,6 @@ public:
     //MainWindow(QWidget *parent = nullptr);
     MainWindow(int argc, char *argv[], QWidget *parent = nullptr);
     ~MainWindow();
-    QMap<QString, Node*> NodeContainer;
 
 private slots:
     void on_AddNodeButton_clicked();
@@ -50,10 +49,14 @@ private slots:
     void on_LoadGraphButton_clicked();
 
 private:
+    QMap<QString, Node*> NodeContainer;
+    QSet<Edge*> EdgeContainer;
+
     int GetRandomNumberFromTo(int a, int b);
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
     QMessageBox ErrorMsgBox;
+    QMessageBox msgBox;
     QRandomGenerator randomgenerator;
     int amount = 0;
     void AddNode(QString Name, QString Description, int PositionA, int PositionB);

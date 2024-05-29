@@ -12,13 +12,28 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent): QMainWindow(par
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setCacheMode(QGraphicsView::CacheBackground);
     ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-    connect(scene,SIGNAL(changed(QList<QRectF>)),SLOT(update()));
 
     QRegExpValidator *validator1 = new QRegExpValidator(QRegExp("[0-9]+(,[0-9]+)*"));
     ui->WeightAddEdgeLine->setValidator(validator1);
 
     QRegExpValidator *validator2 = new QRegExpValidator(QRegExp("^[^\\s\\W]*\\.?[a-zA-Z]*$"));
     ui->FileNameLine->setValidator(validator2);
+
+    QRegExpValidator *validator3 = new QRegExpValidator(QRegExp("[^;]*"));
+    ui->NameAddLine->setValidator(validator3);
+    ui->DescriptionAddLine->setValidator(validator3);
+    ui->OldNameChangeLine->setValidator(validator3);
+    ui->NewNameChangeLine->setValidator(validator3);
+    ui->NewDescriptionChangeLine->setValidator(validator3);
+    ui->Name1AddEdgeLine->setValidator(validator3);
+    ui->Name2AddEdgeLine->setValidator(validator3);
+    ui->Name1DelEdgeLine->setValidator(validator3);
+    ui->Name2DelEdgeLine->setValidator(validator3);
+
+    msgBox.setWindowTitle("Внимание");
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setText("Данное имя файла уже используется, хотите переписать файл?");
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
     if (argc > 1)
     {
@@ -75,17 +90,22 @@ void MainWindow::RemoveNode(QString Name)
         return;
     }
 
-    //удаление всех ребер для данного Node
-    NodeContainer[Name]->RemoveAllEdges();
+    Node* node = NodeContainer[Name];
 
-    for (auto i = NodeContainer.begin(); i != NodeContainer.end(); i++)
+    //удаление всех ребер для данного Node
+    foreach (Edge *edge, EdgeContainer)
     {
-        i.value()->RemoveEdge(NodeContainer[Name]);
+        if (edge->Contains1(node))
+        {
+            EdgeContainer.remove(edge);
+            scene->removeItem(edge);
+            delete edge;
+        }
     }
 
-    scene->removeItem(NodeContainer[Name]);
-    delete NodeContainer[Name];
+    scene->removeItem(node);
     NodeContainer.remove(Name);
+    delete node;
 }
 
 void MainWindow::ChangeNode(QString OldName, QString NewName, QString Description)
@@ -158,30 +178,27 @@ void MainWindow::AddEdge(QString Name1, QString Name2, QString Weight)
         return;
     }
 
-    if (NodeContainer[Name1]->EdgesContains(NodeContainer[Name2]))
-    {
-        NodeContainer[Name1]->NewEdge(NodeContainer[Name2], Weight);
+    Node* node1 = NodeContainer[Name1];
+    Node* node2 = NodeContainer[Name2];
 
-        //ErrorMsgBox.setIcon(QMessageBox::Warning);
-        //ErrorMsgBox.setWindowTitle("Изменение");
-        //ErrorMsgBox.setText("Существующее ребро изменено!");
-        //ErrorMsgBox.exec();
-        return;
+    foreach (Edge *edge, EdgeContainer)
+    {
+        if (edge->Contains2(node1, node2))
+        {
+            edge->ChangeWeight(Weight);
+            //ErrorMsgBox.setIcon(QMessageBox::Warning);
+            //ErrorMsgBox.setWindowTitle("Изменение");
+            //ErrorMsgBox.setText("Существующее ребро изменено!");
+            //ErrorMsgBox.exec();
+            return;
+        }
     }
 
-    if(NodeContainer[Name2]->EdgesContains(NodeContainer[Name1]))
-    {
-        NodeContainer[Name2]->NewEdge(NodeContainer[Name1], Weight);
-
-        //ErrorMsgBox.setIcon(QMessageBox::Warning);
-        //ErrorMsgBox.setWindowTitle("Изменение");
-        //ErrorMsgBox.setText("Существующее ребро изменено!");
-        //ErrorMsgBox.exec();
-        return;
-    }
-
-    // нет такого ребра
-    NodeContainer[Name1]->NewEdge(NodeContainer[Name2], Weight);
+    // нет такого ребра, создание ребра
+    Edge *edge = new Edge(0, node1, node2, Weight);
+    edge->setZValue(-1);
+    scene->addItem(edge);
+    EdgeContainer.insert(edge);
 }
 
 void MainWindow::RemoveEdge(QString Name1, QString Name2)
@@ -213,26 +230,18 @@ void MainWindow::RemoveEdge(QString Name1, QString Name2)
         return;
     }
 
-    if (NodeContainer[Name1]->EdgesContains(NodeContainer[Name2]))
+    Node* node1 = NodeContainer[Name1];
+    Node* node2 = NodeContainer[Name2];
+
+    foreach (Edge *edge, EdgeContainer)
     {
-        NodeContainer[Name1]->RemoveEdge(NodeContainer[Name2]);
-
-        //ErrorMsgBox.setIcon(QMessageBox::Warning);
-        //ErrorMsgBox.setWindowTitle("Изменение");
-        //ErrorMsgBox.setText("Существующее ребро изменено!");
-        //ErrorMsgBox.exec();
-        return;
-    }
-
-    if (NodeContainer[Name2]->EdgesContains(NodeContainer[Name1]))
-    {
-        NodeContainer[Name2]->RemoveEdge(NodeContainer[Name1]);
-
-        //ErrorMsgBox.setIcon(QMessageBox::Warning);
-        //ErrorMsgBox.setWindowTitle("Изменение");
-        //ErrorMsgBox.setText("Существующее ребро изменено!");
-        //ErrorMsgBox.exec();
-        return;
+        if (edge->Contains2(node1, node2))
+        {
+            EdgeContainer.remove(edge);
+            scene->removeItem(edge);
+            delete edge;
+            return;
+        }
     }
 
     ErrorMsgBox.setIcon(QMessageBox::Critical);
@@ -243,9 +252,16 @@ void MainWindow::RemoveEdge(QString Name1, QString Name2)
 
 void MainWindow::RemoveAllNodes()
 {
+    //удаление всех ребер
+    foreach (Edge *edge, EdgeContainer)
+    {
+        scene->removeItem(edge);
+        delete edge;
+    }
+    EdgeContainer.clear();
+
     for (auto i = NodeContainer.begin(); i != NodeContainer.end(); i++)
     {
-        i.value()->RemoveAllEdges();
         scene->removeItem(i.value());
         delete i.value();
     }
@@ -297,8 +313,22 @@ void MainWindow::SaveGraph(std::string Name)
         return;
     }
 
-    std::fstream file;
-    file.open(Name, std::fstream::in | std::fstream::out | std::fstream::app);
+    std::ifstream check;
+    check.open(Name);
+    if (check.is_open())
+    {
+        check.close();
+        int result = msgBox.exec();
+        if (result != QMessageBox::Yes)
+        {
+            return;
+        }
+        //иначе result == QMessageBox::Yes
+        //продолжаем
+    }
+
+    std::ofstream file;
+    file.open(Name, std::ios::trunc);
     if ( ! file.is_open())
     {
         ErrorMsgBox.setIcon(QMessageBox::Critical);
@@ -314,16 +344,12 @@ void MainWindow::SaveGraph(std::string Name)
     }
     file << "|\n";
 
-    for (auto i = NodeContainer.begin(); i != NodeContainer.end(); i++)
+    foreach (Edge *edge, EdgeContainer)
     {
-        QHash<Node*, QString> tmp = i.value()->GetEdges();
-        for (auto j = tmp.begin(); j != tmp.end(); j++)
-        {
-            file << i.value()->GetName() << ';' << j.key()->GetName() << ';' << j.value().toStdString();
-            file << '\n';
-        }
-        tmp.clear();
+        file << edge->GetNode1()->GetName() << ';' << edge->GetNode2()->GetName() << ';' << edge->GetWeight();
+        file << '\n';
     }
+
     file.close();
     ErrorMsgBox.setIcon(QMessageBox::Warning);
     ErrorMsgBox.setWindowTitle("Сохранение");
@@ -331,7 +357,6 @@ void MainWindow::SaveGraph(std::string Name)
     ErrorMsgBox.exec();
 }
 
-//gpt existed file only to read
 void MainWindow::LoadGraph(std::string Name)
 {
     if (!CheckFileName(Name))
@@ -343,8 +368,8 @@ void MainWindow::LoadGraph(std::string Name)
         return;
     }
 
-    std::fstream file;
-    file.open(Name, std::fstream::in | std::fstream::out | std::fstream::app);
+    std::ifstream file;
+    file.open(Name);
     if ( ! file.is_open())
     {
         ErrorMsgBox.setIcon(QMessageBox::Critical);

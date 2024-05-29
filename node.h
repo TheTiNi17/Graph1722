@@ -15,22 +15,16 @@ class Node : public QObject, public QGraphicsItem
     Q_OBJECT
 public:
     Node(QObject *parent = 0, QString Name = "", QString Description = "");
-    QString Name;
-    QString Description;
     void ChangeName(QString Name);
     void ChangeDescription(QString Name);
     std::string GetName();
     std::string GetDescription();
-    bool EdgesContains(Node* node);
-    void NewEdge(Node* node, QString weight);
-    void RemoveEdge(Node* node);
-    void RemoveAllEdges();
-    QHash <Node*, QString> GetEdges() const;
 
 signals:
 
 private:
-    QHash <Node*, QString> Edges;
+    QString Name;
+    QString Description;
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
