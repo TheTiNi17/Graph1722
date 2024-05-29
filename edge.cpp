@@ -52,7 +52,7 @@ bool Edge::Contains2(Node *NodeA, Node *NodeB)
         return true;
     }
 
-    if ((this->Node1->GetName() == NodeB->GetName()) && (this->Node2->GetDescription() == NodeA->GetName()))
+    if ((this->Node1->GetName() == NodeB->GetName()) && (this->Node2->GetName() == NodeA->GetName()))
     {
         return true;
     }
